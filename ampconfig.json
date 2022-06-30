@@ -1,0 +1,19 @@
+{
+  "dataServiceGeneratorVersion": "0.13.1",
+  "appInfo": {
+    "name": "Devbox CMS",
+    "description": "A Headless CMS for Devbox SITE",
+    "version": "y5onh4wx",
+    "id": "cl50ozeh015766501l9j27w06g0",
+    "url": "https://server.amplication.com/cl50ozeh015766501l9j27w06g0",
+    "settings": {
+      "dbHost": "localhost",
+      "dbName": "",
+      "dbPassword": "admin",
+      "dbPort": 5432,
+      "dbUser": "admin",
+      "appId": "cl50ozeh015766501l9j27w06g0",
+      "authProvider": "Jwt"
+    }
+  }
+}
