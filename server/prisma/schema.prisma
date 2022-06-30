@@ -1,0 +1,175 @@
+datasource postgres {
+  provider = "postgresql"
+  url      = env("POSTGRESQL_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  comments        Comment[]
+  config          Config?      @relation(fields: [configId], references: [id])
+  configId        String?
+  createdAt       DateTime     @default(now())
+  firstName       String?
+  id              String       @id @default(cuid())
+  lastName        String?
+  password        String
+  roles           String[]
+  starredProjects Project[]
+  updatedAt       DateTime     @updatedAt
+  username        String       @unique
+  userProfile     UserProfile? @relation(fields: [userProfileId], references: [id])
+  userProfileId   String?
+}
+
+model Article {
+  body        Json
+  category    Category? @relation(fields: [categoryId], references: [id])
+  categoryId  String?
+  comments    Comment[]
+  createdAt   DateTime  @default(now())
+  description Json
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  tags        Tag[]
+  thumbnail   String
+  title       Json
+  updatedAt   DateTime  @updatedAt
+}
+
+model Comment {
+  article   Article? @relation(fields: [articleId], references: [id])
+  articleId String?
+  author    User?    @relation(fields: [authorId], references: [id])
+  authorId  String?
+  body      Json
+  createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  updatedAt DateTime @updatedAt
+}
+
+model Project {
+  body       Json
+  category   Category? @relation(fields: [categoryId], references: [id])
+  categoryId String?
+  createdAt  DateTime  @default(now())
+  demoUrl    String?
+  id         String    @id @default(cuid())
+  publishAt  String?
+  slug       String    @unique
+  sourceUrl  String?
+  stars      User?     @relation(fields: [starsId], references: [id])
+  starsId    String?
+  tags       Tag[]
+  thumbnail  String
+  title      Json
+  updatedAt  DateTime  @updatedAt
+}
+
+model Config {
+  colorSchema EnumConfigColorSchema?
+  createdAt   DateTime               @default(now())
+  id          String                 @id @default(cuid())
+  language    EnumConfigLanguage?
+  updatedAt   DateTime               @updatedAt
+  user        User
+}
+
+model Category {
+  articles  Article[]
+  color     String?   @unique
+  createdAt DateTime  @default(now())
+  id        String    @id @default(cuid())
+  name      Json
+  projects  Project[]
+  slug      String    @unique
+  updatedAt DateTime  @updatedAt
+}
+
+model Tag {
+  article   Article? @relation(fields: [articleId], references: [id])
+  articleId String?
+  color     String?
+  createdAt DateTime @default(now())
+  icon      String?
+  id        String   @id @default(cuid())
+  name      Json
+  project   Project? @relation(fields: [projectId], references: [id])
+  projectId String?
+  slug      String   @unique
+  updatedAt DateTime @updatedAt
+}
+
+model Schedule {
+  createdAt    DateTime             @default(now())
+  description  String?
+  id           String               @id @default(cuid())
+  meetAt       DateTime?
+  meetDuration Float?
+  sender       String?
+  subject      EnumScheduleSubject?
+  updatedAt    DateTime             @updatedAt
+}
+
+model UserProfile {
+  address           String?
+  biography         Json?
+  contactEmail      String?
+  createdAt         DateTime @default(now())
+  facebookUsername  String?
+  githubUsername    String?  @unique
+  hobby             Json
+  id                String   @id @default(cuid())
+  instagramUsername String?
+  linkedinUsername  String?
+  location          String?
+  phoneNumber       String?  @unique
+  quote             Json
+  skills            Skill[]
+  tools             Tool[]
+  twitterUsername   String?
+  updatedAt         DateTime @updatedAt
+  user              User
+  whatsappUsernname String?
+  youtubeUsername   String?
+}
+
+model Skill {
+  createdAt     DateTime     @default(now())
+  experience    Int?
+  icon          String?
+  id            String       @id @default(cuid())
+  name          String?
+  updatedAt     DateTime     @updatedAt
+  userProfile   UserProfile? @relation(fields: [userProfileId], references: [id])
+  userProfileId String?
+}
+
+model Tool {
+  colored       Boolean?
+  createdAt     DateTime     @default(now())
+  icon          String?
+  id            String       @id @default(cuid())
+  name          String?
+  updatedAt     DateTime     @updatedAt
+  userProfile   UserProfile? @relation(fields: [userProfileId], references: [id])
+  userProfileId String?
+}
+
+enum EnumConfigColorSchema {
+  dark
+  light
+}
+
+enum EnumConfigLanguage {
+  id_ID
+  en_US
+}
+
+enum EnumScheduleSubject {
+  JobOffer
+  Teaching
+  Freelance
+}
